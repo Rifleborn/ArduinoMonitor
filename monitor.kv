@@ -1,0 +1,94 @@
+# root widget class
+<MainWidget>
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+
+        FloatLayout:
+            orientation: 'vertical'
+            size_hint: 1, 0.14
+            canvas.before:
+                Color:
+                    rgba: 0.9, 0.77, 0.17, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: "ARDUINO MONITOR"
+                font_name: "fonts/Oswald-VariableFont_wght.ttf"
+                font_size: "36sp"
+                color: 0, 0, 0, 0.5  # темно-сіра тінь
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                size_hint: 1, 1
+                # зсув тіні трохи вниз-праворуч
+                canvas.before:
+                    PushMatrix
+                    Translate:
+                        x: 2
+                        y: -2
+                canvas.after:
+                    PopMatrix
+
+            Label:
+                text: "ARDUINO MONITOR"
+                font_name: "fonts/Oswald-VariableFont_wght.ttf"
+                font_size: "36sp"
+                color: 1, 1, 1, 1
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                size_hint: 1, 1
+#            MDCard
+#                style: "elevated"
+#                pos_hint: {"center_x": .5, "center_y": .5}
+#                padding: "4dp"
+#                size_hint: None, None
+#                size: "240dp", "100dp"
+#                # Sets custom properties.
+#                theme_shadow_color: "Custom"
+#                shadow_color: "green"
+#                theme_bg_color: "Custom"
+#                md_bg_color: "white"
+#                md_bg_color_disabled: "grey"
+#                theme_shadow_offset: "Custom"
+#                shadow_offset: (1, -2)
+#                theme_shadow_softness: "Custom"
+#                shadow_softness: 1
+#                theme_elevation_level: "Custom"
+#                elevation_level: 2
+#
+#                MDRelativeLayout:
+#
+#                    MDIconButton:
+#                        icon: "dots-vertical"
+#                        pos_hint: {"top": 1, "right": 1}
+#
+#                    MDLabel:
+#                        text: "Elevated"
+#                        adaptive_size: True
+#                        color: "grey"
+#                        pos: "12dp", "12dp"
+#                        bold: True
+
+        ScrollView:
+            size_hint: 1, 0.7
+#            canvas.before:
+#                Color:
+#                    rgba: 0.37, 0.87, 0.17, 1  # Зелений фон
+#                Rectangle:
+#                    pos: self.pos
+#                    size: self.size
+
+
+            BoxLayout:
+                id: table_container
+                canvas.before:
+                    Color:
+                        rgba: 0.533, 0.847, 0.098, 0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                spacing: "12dp"
+                padding: 8, 8
+                orientation: 'vertical'
+                size: root.width, root.height
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
