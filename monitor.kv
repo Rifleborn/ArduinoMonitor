@@ -4,19 +4,97 @@
         orientation: 'vertical'
         size: root.width, root.height
 
+
         FloatLayout:
             orientation: 'vertical'
             size_hint: 1, 0.14
             canvas.before:
                 Color:
-                    rgba: 0.9, 0.77, 0.17, 1
+                    rgba:  0.498, 0.549, 0.667, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             Label:
                 text: "ARDUINO MONITOR"
                 font_name: "fonts/Oswald-VariableFont_wght.ttf"
-                font_size: "36sp"
+                font_size: "34sp"
                 color: 0, 0, 0, 0.5  # темно-сіра тінь
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                 size_hint: 1, 1
@@ -36,53 +114,152 @@
                 color: 1, 1, 1, 1
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                 size_hint: 1, 1
-#            MDCard
-#                style: "elevated"
-#                pos_hint: {"center_x": .5, "center_y": .5}
-#                padding: "4dp"
-#                size_hint: None, None
-#                size: "240dp", "100dp"
-#                # Sets custom properties.
-#                theme_shadow_color: "Custom"
-#                shadow_color: "green"
-#                theme_bg_color: "Custom"
-#                md_bg_color: "white"
-#                md_bg_color_disabled: "grey"
-#                theme_shadow_offset: "Custom"
-#                shadow_offset: (1, -2)
-#                theme_shadow_softness: "Custom"
-#                shadow_softness: 1
-#                theme_elevation_level: "Custom"
-#                elevation_level: 2
-#
-#                MDRelativeLayout:
-#
-#                    MDIconButton:
-#                        icon: "dots-vertical"
-#                        pos_hint: {"top": 1, "right": 1}
-#
-#                    MDLabel:
-#                        text: "Elevated"
-#                        adaptive_size: True
-#                        color: "grey"
-#                        pos: "12dp", "12dp"
-#                        bold: True
+
+        BoxLayout:
+            padding: [0, 5, 5, 5]  # [ліва, верх, право, низ]
+            id: table_container_top
+            orientation: 'horizontal'
+            size_hint: 1, 0.14
+            canvas.before:
+                Color:
+                    rgba: 0.918, 0.937, 0.937, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            BoxLayout:
+                id: table_temp
+                padding: [8, 0, 0, 0]  # [ліва, верх, право, низ]
+                spacing: dp(7)
+                size: root.height, root.width
+                orientation: 'horizontal'
+
+                canvas.before:
+                    Color:
+                        rgba: 0.5647, 0.9608, 0.9216, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "Найвища\nтемпература:"
+                    text_size: None, self.height
+                    font_name: "fonts/Oswald-VariableFont_wght.ttf"
+                    # resiable font
+                    font_size: min(root.width * 0.032, sp(21))
+                    color: 0, 0, 0, 1
+                    size_hint: 0.4, 1
+                    # alignment
+                    halign: 'left'
+                    valign: 'middle'
+
+                MDCard:
+                    orientation: "horizontal"
+                    size_hint: 0.8, 1
+                    padding: "6dp"
+                    radius: [15, 15, 15, 15]
+#                    md_bg_color: 1, 1, 1, 1
+                    elevation: 3
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "1dp"
+                        MDLabel:
+                            text: "Темп."
+                            bold: True
+
+                        MDLabel:
+                            text: "Час"
+                            bold: True
+
+                        MDLabel:
+                            text: "Дата"
+                            bold: True
+
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "1dp"
+                        MDLabel:
+                            text: "32.5°C"
+
+                        MDLabel:
+                            text: "14:30"
+
+                        MDLabel:
+                            text: "22/05/2025"
+
+
+            BoxLayout:
+                id: table_hum
+                padding: [10, 0, 0, 0]  # [ліва, верх, право, низ]
+                spacing: dp(7)
+                size: root.height, root.width
+                orientation: 'horizontal'
+                canvas.before:
+                    Color:
+                        rgba: 0.5647, 0.9608, 0.9216, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "Найвища\nвологість:"
+                    text_size: None, self.height
+                    font_name: "fonts/Oswald-VariableFont_wght.ttf"
+                    # resiable font
+                    font_size: min(root.width * 0.035, sp(22))
+                    color: 0, 0, 0, 1
+                    size_hint: 0.4, 1
+                    # alignment
+                    halign: 'left'
+                    valign: 'middle'
+
+                MDCard:
+                    orientation: "horizontal"
+                    size_hint: 0.8, 1
+                    padding: "6dp"
+                    radius: [15, 15, 15, 15]
+#                    md_bg_color: 1, 1, 1, 1
+                    elevation: 3
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "1dp"
+                        MDLabel:
+                            text: "Волог."
+                            bold: True
+
+                        MDLabel:
+                            text: "Час"
+                            bold: True
+
+                        MDLabel:
+                            text: "Дата"
+                            bold: True
+
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "1dp"
+                        MDLabel:
+                            text: "44%"
+
+                        MDLabel:
+                            text: "14:30"
+
+                        MDLabel:
+                            text: "22/05/2025"
+
+
 
         ScrollView:
             size_hint: 1, 0.7
-#            canvas.before:
-#                Color:
-#                    rgba: 0.37, 0.87, 0.17, 1  # Зелений фон
-#                Rectangle:
-#                    pos: self.pos
-#                    size: self.size
-
-
             BoxLayout:
                 id: table_container
                 canvas.before:
                     Color:
-                        rgba: 0.533, 0.847, 0.098, 0.8
+                        rgba: 0.918, 0.937, 0.937, 1
                     Rectangle:
                         pos: self.pos
                         size: self.size

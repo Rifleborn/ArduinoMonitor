@@ -20,29 +20,25 @@ client = gspread.authorize(creds)
 mainSheet = client.open_by_key(sheet_id)
 valuesNamesList = mainSheet.sheet1.row_values(1)
 
-async def loadGoogleData(self, numberOfRows):
-    print('[ARDUINO PROJECT] Loading data...')
+async def loadGoogleData(self, numberOfRows, rowStart):
+    print('[ARDUINO PROJECT] Loading data from rowStart: ' + str(rowStart))
 
     if (numberOfRows == 0):
         numberOfRows = 2
 
+    totalRows = len(mainSheet.sheet1.col_values(1))
 
-    rowEnd = numberOfRows
-    rowStart = 2;
+    rowEnd = totalRows
+    rowStart = rowStart + max(3, rowEnd - numberOfRows + 1)  # не вище рядка 3
 
     dataToAdd = []
-    for i in range (rowStart, rowEnd+2):
-        # valuesList = mainSheet.sheet1.row_values(i)
-        valuesList = mainSheet.sheet1.get("A"+str(i)+":D"+str(i))
-        # print('[ARDUINO PROJECT] ' + str(valuesList))
-        dataToAdd.append(valuesList[0])
+    for i in range(rowEnd, rowStart - 1, -1):  # проходимо знизу вгору
+        valuesList = mainSheet.sheet1.get(f"A{i}:D{i}")
+        if valuesList:
+            dataToAdd.append(valuesList[0])
 
-    print('[ARDUINO PROJECT] Data to add:\n' + str(dataToAdd))
+    print('[ARDUINO PROJECT] Data to add: ' + str(len(dataToAdd)))
 
     for listInside in dataToAdd:
-        # listInside.insert(0, str(ROW_COUNTER))
-        # listInside.insert(0, str(111))
-        self.data_tables.add_row(listInside)
-        # ROW_COUNTER += 1
-
-
+        listInside[1] = str(int(float(listInside[1]))) + '%'
+        self.mainTable.add_row(listInside)

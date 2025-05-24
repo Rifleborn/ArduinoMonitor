@@ -8,8 +8,6 @@ import logging
 import asyncio
 from threading import Thread
 
-# asyncio.ensure_future(loadGoogleData(self, NUMBER_OF_FIRST_VALUES_DT))
-
 # This modifies the console output
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -40,57 +38,60 @@ loop = asyncio.new_event_loop()
 class MainWidget(Widget):
     pass
 
-NUMBER_OF_FIRST_VALUES_DT = 3
+NUMBER_OF_FIRST_VALUES_DT = 5
 ROW_COUNTER = 1
-
+ROW_LOADED = 5
 
 # loads .kv file with monitor### name
 class Monitor(MDApp):
 
     def loadMorePressed(self, instance):
-        print("[ARDUINO PROJECT] --Кнопка натиснута--")
+        print("[ARDUINO PROJECT] --Кнопка 'Завантажити ще' натиснута--")
+        global ROW_LOADED
+        asyncio.run_coroutine_threadsafe(loadGoogleData(self, 5, ROW_LOADED), self.async_loop)
+        ROW_LOADED = ROW_LOADED + 5
 
     def build(self):
 
-        self.data_tables = MDDataTable(
+        self.mainTable = MDDataTable(
             use_pagination=True,
             pos_hint = {'center_x': 0.5, 'center_y': 0.5},
             # check=True,
             column_data=[
-                ("Teм.", dp(20)),
-                ("Вологість", dp(20)),
+                ("Teмп.", dp(12)),
+                ("Вологість", dp(17)),
                 # self.sort_on_signal
-                ("Час", dp(14)),
-                ("Дата", dp(18)),
+                ("Час", dp(15)),
+                ("Дата", dp(19)),
             ],
             row_data=[
-                (
-                    "24",
-                    "55%",
-                    "-",
-                    "2024",
-                ),
-                (
-                    "24",
-                    "55%",
-                    "-",
-                    "2024",
-                ),
-                (
-                    "24",
-                    "55%",
-                    "-",
-                    "2024",
-                ),
+                # (
+                #     "24",
+                #     "55%",
+                #     "12:35",
+                #     "2024",
+                # ),
+                # (
+                #     "24",
+                #     "55%",
+                #     "12:35",
+                #     "2024",
+                # ),
+                # (
+                #     "24",
+                #     "55%",
+                #     "12:35",
+                #     "2024",
+                # ),
             ],
             elevation=2,
         )
         
-        self.data_tables.bind(on_row_press=self.on_row_press)
-        self.data_tables.bind(on_check_press=self.on_check_press)
+        self.mainTable.bind(on_row_press=self.on_row_press)
+        self.mainTable.bind(on_check_press=self.on_check_press)
 
         rootWidget = MainWidget()
-        rootWidget.ids.table_container.add_widget(self.data_tables)
+        rootWidget.ids.table_container.add_widget(self.mainTable)
 
         print('[ARDUINO PROJECT] Launch async loadGoogleData()')
 
@@ -99,7 +100,7 @@ class Monitor(MDApp):
         Thread(target=self.start_loop, daemon=True).start()
 
         # Викликаємо асинхронну функцію через asyncio.create_task
-        asyncio.run_coroutine_threadsafe(loadGoogleData(self, NUMBER_OF_FIRST_VALUES_DT), self.async_loop)
+        asyncio.run_coroutine_threadsafe(loadGoogleData(self, NUMBER_OF_FIRST_VALUES_DT, 0), self.async_loop)
         print('[ARDUINO PROJECT] Return rootWidget')
 
         button = MDRaisedButton(
@@ -107,9 +108,10 @@ class Monitor(MDApp):
             size_hint=(1, 0.15),
             pos_hint = {"center_x": 0.5},
             font_style="H5",  # Більший і жирний текст
+            md_bg_color=(0.224, 0.800, 0.776, 1),
         )
-        button.bind(on_release=self.loadMorePressed)
 
+        button.bind(on_release=self.loadMorePressed)
         rootWidget.ids.table_container.add_widget(button)
 
         return rootWidget
