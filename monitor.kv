@@ -4,7 +4,6 @@
         orientation: 'vertical'
         size: root.width, root.height
 
-
         FloatLayout:
             orientation: 'vertical'
             size_hint: 1, 0.14
@@ -14,82 +13,6 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             Label:
                 text: "ARDUINO MONITOR"
@@ -116,13 +39,13 @@
                 size_hint: 1, 1
 
         BoxLayout:
-            padding: [0, 5, 5, 5]  # [ліва, верх, право, низ]
+            padding: [0, 5, 5, 0]  # [ліва, верх, право, низ]
             id: table_container_top
             orientation: 'horizontal'
             size_hint: 1, 0.14
             canvas.before:
                 Color:
-                    rgba: 0.918, 0.937, 0.937, 1
+                    rgba: 0.5647, 0.9608, 0.9216, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -181,13 +104,16 @@
                         orientation: "vertical"
                         spacing: "1dp"
                         MDLabel:
-                            text: "32.5°C"
+                            id: high_temp_value
+                            text: "- °C"
 
                         MDLabel:
-                            text: "14:30"
+                            id: high_temp_time
+                            text: "--:--"
 
                         MDLabel:
-                            text: "22/05/2025"
+                            id: high_temp_date
+                            text: "--/--/----"
 
 
             BoxLayout:
@@ -243,29 +169,45 @@
                         orientation: "vertical"
                         spacing: "1dp"
                         MDLabel:
-                            text: "44%"
+                            id: high_hum_value
+                            text: "- %"
 
                         MDLabel:
-                            text: "14:30"
+                            id: high_hum_time
+                            text: "--:--"
 
                         MDLabel:
-                            text: "22/05/2025"
+                            id: high_hum_date
+                            text: "--/--/----"
 
 
 
         ScrollView:
             size_hint: 1, 0.7
             BoxLayout:
-                id: table_container
+                id: footer
+                padding: [0, 0, 0, 8]  # [ліва, верх, право, низ]
+                orientation: 'vertical'
                 canvas.before:
                     Color:
                         rgba: 0.918, 0.937, 0.937, 1
                     Rectangle:
                         pos: self.pos
                         size: self.size
-
-                spacing: "12dp"
-                padding: 8, 8
-                orientation: 'vertical'
-                size: root.width, root.height
-                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                BoxLayout:
+                    AnchorLayout:
+                        anchor_x: 'center'
+                        anchor_y: 'center'
+                        id: table_container
+                        canvas.before:
+                            Color:
+#                               rgba: 0.498, 0.976, 0.514, 1
+                                rgba: 0.918, 0.937, 0.937, 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        spacing: "12dp"
+                        padding: 8, 8
+                        orientation: 'vertical'
+                        size: root.width, root.height
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}

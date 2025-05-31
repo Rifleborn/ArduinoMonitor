@@ -26,7 +26,7 @@ from kivy.metrics import dp
 from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.screen import MDScreen
-
+from kivymd.uix.spinner import MDSpinner
 
 # app window size
 # from kivy.core.window import Window
@@ -38,131 +38,82 @@ loop = asyncio.new_event_loop()
 class MainWidget(Widget):
     pass
 
-NUMBER_OF_FIRST_VALUES_DT = 5
-ROW_COUNTER = 1
-ROW_LOADED = 5
-
 # loads .kv file with monitor### name
 class Monitor(MDApp):
+    # Start asyncio event loop in background thread
 
-    def loadMorePressed(self, instance):
-        print("[ARDUINO PROJECT] --Кнопка 'Завантажити ще' натиснута--")
-        global ROW_LOADED
-        asyncio.run_coroutine_threadsafe(loadGoogleData(self, 5, ROW_LOADED), self.async_loop)
-        ROW_LOADED = ROW_LOADED + 5
+    # second is optional button instance
+    def loadMoreRecords(self, instance=None):
+        if (self.loadMoreIsPressed == False):
+            self.loadMoreIsPressed = True
+
+            self.tableSpinner.opacity = 1
+            self.tableSpinner.disabled = False
+
+            asyncio.run_coroutine_threadsafe(loadGoogleData(self, 5), self.async_loop)
+
+        else:
+            print("[ARDUINO PROJECT] Error: button loadMore already pressed! Loading skipped.")
 
     def build(self):
+
+        # variables
+        self.loadMoreIsPressed = False
+        self.totalRowsInSheet = 0
+        self.totalRows = 0
+
+        self.rootWidget = MainWidget()
+
+        self.async_loop = asyncio.new_event_loop()
+        Thread(target=self.start_loop, daemon=True).start()
 
         self.mainTable = MDDataTable(
             use_pagination=True,
             pos_hint = {'center_x': 0.5, 'center_y': 0.5},
             # check=True,
             column_data=[
-                ("Teмп.", dp(12)),
-                ("Вологість", dp(17)),
-                # self.sort_on_signal
                 ("Час", dp(15)),
                 ("Дата", dp(19)),
+                ("Teмп.", dp(12)),
+                ("Вологість", dp(17)),
+                ("Повітря", dp(16)),
+                ("Дощ", dp(13)),
             ],
-            row_data=[
-                # (
-                #     "24",
-                #     "55%",
-                #     "12:35",
-                #     "2024",
-                # ),
-                # (
-                #     "24",
-                #     "55%",
-                #     "12:35",
-                #     "2024",
-                # ),
-                # (
-                #     "24",
-                #     "55%",
-                #     "12:35",
-                #     "2024",
-                # ),
-            ],
+            row_data=[],
             elevation=2,
         )
-        
-        self.mainTable.bind(on_row_press=self.on_row_press)
-        self.mainTable.bind(on_check_press=self.on_check_press)
 
-        rootWidget = MainWidget()
-        rootWidget.ids.table_container.add_widget(self.mainTable)
+        self.rootWidget.ids.table_container.add_widget(self.mainTable)
 
-        print('[ARDUINO PROJECT] Launch async loadGoogleData()')
+        #  add it to spinner
+        self.tableSpinner = MDSpinner(
+            size_hint=(None, None),
+            size=(dp(46), dp(46)),
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            active=True
+        )
 
-        # Start asyncio event loop in background thread
-        self.async_loop = asyncio.new_event_loop()
-        Thread(target=self.start_loop, daemon=True).start()
-
-        # Викликаємо асинхронну функцію через asyncio.create_task
-        asyncio.run_coroutine_threadsafe(loadGoogleData(self, NUMBER_OF_FIRST_VALUES_DT, 0), self.async_loop)
-        print('[ARDUINO PROJECT] Return rootWidget')
+        self.rootWidget.ids.table_container.add_widget(self.tableSpinner)
 
         button = MDRaisedButton(
             text="Завантажити ще",
-            size_hint=(1, 0.15),
+            # size_hint=(1, 0.15),
+            size_hint=(0.8, 0.1),
             pos_hint = {"center_x": 0.5},
             font_style="H5",  # Більший і жирний текст
             md_bg_color=(0.224, 0.800, 0.776, 1),
         )
 
-        button.bind(on_release=self.loadMorePressed)
-        rootWidget.ids.table_container.add_widget(button)
+        button.bind(on_release=self.loadMoreRecords)
+        self.rootWidget.ids.footer.add_widget(button)
 
-        return rootWidget
+        self.loadMoreRecords()
+
+        return self.rootWidget
 
     def start_loop(self):
         asyncio.set_event_loop(self.async_loop)
         self.async_loop.run_forever()
-
-    def on_row_press(self, instance_table, instance_row):
-        '''Called when a table row is clicked.'''
-
-        print(instance_table, instance_row)
-
-
-    def on_check_press(self, instance_table, current_row):
-        '''Called when the check box in the table row is checked.'''
-
-        print(instance_table, current_row)
-
-    # Sorting Methods:
-    # since the https://github.com/kivymd/KivyMD/pull/914 request, the
-    # sorting method requires you to sort out the indexes of each data value
-    # for the support of selections.
-    #
-    # The most common method to do this is with the use of the builtin function
-    # zip and enumerate, see the example below for more info.
-    #
-    # The result given by these funcitons must be a list in the format of
-    # [Indexes, Sorted_Row_Data]
-
-
-    def sort_on_signal(self, data):
-        return zip(*sorted(enumerate(data), key=lambda l: l[1][2]))
-
-
-    def sort_on_schedule(self, data):
-        return zip(
-            *sorted(
-                enumerate(data),
-                key=lambda l: sum(
-                    [
-                        int(l[1][-2].split(":")[0]) * 60,
-                        int(l[1][-2].split(":")[1]),
-                    ]
-                ),
-            )
-        )
-
-
-    def sort_on_team(self, data):
-        return zip(*sorted(enumerate(data), key=lambda l: l[1][-1]))
 
 # run application
 if __name__ == '__main__':
