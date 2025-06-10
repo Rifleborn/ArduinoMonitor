@@ -1,6 +1,6 @@
 import kivy
 kivy.require('2.0.0')
-
+# kivymd - 1.1.1
 from gdataprocessor import loadGoogleData
 
 import logging
@@ -27,10 +27,6 @@ from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.spinner import MDSpinner
-
-# app window size
-# from kivy.core.window import Window
-# Window.size = (390, 710)
 
 loop = asyncio.new_event_loop()
 
@@ -77,7 +73,7 @@ class Monitor(MDApp):
                 ("Teмп.", dp(12)),
                 ("Вологість", dp(17)),
                 ("Повітря", dp(16)),
-                ("Дощ", dp(13)),
+                ("Дощ", dp(21)),
             ],
             row_data=[],
             elevation=2,
