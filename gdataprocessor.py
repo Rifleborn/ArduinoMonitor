@@ -10,7 +10,6 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("google").setLevel(logging.WARNING)
 
 #===================
-#temp
 
 import gspread
 from google.oauth2.service_account import Credentials
@@ -61,8 +60,6 @@ async def loadGoogleData(self, rowsToLoad):
         print(f'[ARDUINO PROJECT] Rows in Google Sheet: {totalRowsInSheet}')
         print(f'[ARDUINO PROJECT] TotalRows: {self.totalRows}')
 
-
-
         dataToAdd = []
         if (rowEnd < 2):
             rowEnd = 2
@@ -79,6 +76,7 @@ async def loadGoogleData(self, rowsToLoad):
 
         if len(dataToAdd) > 0:
             for listInside in dataToAdd:
+
                 try:
                     # Clean up non-breaking spaces and commas for float conversion
                     for i in range(2, 6):
@@ -88,7 +86,22 @@ async def loadGoogleData(self, rowsToLoad):
                     listInside[2] = str(int(float(listInside[2]))) + ' C'
                     listInside[3] = str(int(float(listInside[3]))) + '%'
                     listInside[4] = str(int(float(listInside[4])))
-                    listInside[5] = str(int(float(listInside[5])))
+
+                    try:
+                        rain_value = int(float(listInside[5]))
+
+                        if rain_value >= 1000:
+                            listInside[5] = 'Опадів немає'
+                        elif rain_value > 600:
+                            listInside[5] = 'Легкий дощ'
+                        elif rain_value > 300:
+                            listInside[5] = 'Помірний дощ'
+                        else:
+                            listInside[5] = 'Сильний дощ'
+
+                    except (IndexError, ValueError) as e:
+                        print(f"[ARDUINO PROJECT] Failed to process rain value: {e}")
+                        listInside[5] = 'Невідомо'  # fallback label if data missing or corrupted
 
                 except (ValueError, IndexError) as e:
                     print(f"[ERROR] Error processing row {listInside}: {e}")
@@ -114,7 +127,6 @@ async def loadGoogleData(self, rowsToLoad):
                 self.mainTable.row_data = []
                 # insert to top
                 self.mainTable.row_data = dataFormatted + existing_rows
-
 
 
         highestTempData = ['', '', '']
