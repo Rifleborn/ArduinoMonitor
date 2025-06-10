@@ -6,7 +6,7 @@ import asyncio
 import logging
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
-# Вимикаємо DEBUG від google auth
+# disable DEBUG від google auth
 logging.getLogger("google").setLevel(logging.WARNING)
 
 #===================
